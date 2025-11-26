@@ -146,6 +146,7 @@ class Detections:
     xyxy: np.ndarray
     mask: np.ndarray | None = None
     confidence: np.ndarray | None = None
+    all_confidence: np.ndarray | None = None
     class_id: np.ndarray | None = None
     tracker_id: np.ndarray | None = None
     data: dict[str, np.ndarray | list] = field(default_factory=dict)
@@ -240,7 +241,7 @@ class Detections:
         )
 
     @classmethod
-    def from_ultralytics(cls, ultralytics_results) -> Detections:
+    def from_ultralytics(cls, ultralytics_results, all_confidence: np.ndarray | None = None) -> Detections:
         """
         Creates a `sv.Detections` instance from a
         [YOLOv8](https://github.com/ultralytics/ultralytics) inference result.
@@ -312,6 +313,7 @@ class Detections:
                 if ultralytics_results.boxes.id is not None
                 else None,
                 data={CLASS_NAME_DATA_FIELD: class_names},
+                all_confidence=all_confidence
             )
 
         return cls.empty()
@@ -2022,6 +2024,7 @@ class Detections:
             tracker_id=self.tracker_id[index] if self.tracker_id is not None else None,
             data=get_data_item(self.data, index),
             metadata=self.metadata,
+            all_confidence=self.all_confidence[index] if self.all_confidence is not None else None,
         )
 
     def __setitem__(self, key: str, value: np.ndarray | list):
