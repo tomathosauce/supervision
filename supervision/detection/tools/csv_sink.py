@@ -14,6 +14,7 @@ BASE_HEADER = [
     "class_id",
     "confidence",
     "tracker_id",
+    "all_confidence",
 ]
 
 
@@ -122,6 +123,8 @@ class CSVSink:
                 "tracker_id": ""
                 if detections.tracker_id is None
                 else str(detections.tracker_id[i]),
+                "all_confidence": "" if detections.all_confidence is None
+                else str(detections.all_confidence[i].tolist()),
             }
 
             if hasattr(detections, "data"):
